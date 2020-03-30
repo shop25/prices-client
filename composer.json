@@ -1,0 +1,16 @@
+{
+    "name": "s25/prices-client",
+    "description": "Client for parts' prices' services",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^7.4",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "S25\\PricesApiClient\\": "src"
+        }
+    }
+}
