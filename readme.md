@@ -1,6 +1,6 @@
 ## Обзор
 
-_S25\PricesApiClient\Client_ - класс клиента API, включает методы вида request<ApiMethod>,
+_S25\PricesApiClient\Client_ - класс клиента API, включает методы вида _requestApiMethod_,
 возвращающие инстансы запросов, реализующие интерфейс _S25\PricesApiClient\Contract\ApiMethodRequestContract_.
 
 Интерфейсы запросов наследуют из базового интерфейса методы _perform()_ и _performAsync()_
