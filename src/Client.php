@@ -12,7 +12,7 @@ class Client implements Contracts\Client
 
     public function __construct(string $serviceUrl, string $apiKey)
     {
-        $this->serviceUrl = $serviceUrl;
+        $this->serviceUrl = rtrim($serviceUrl, '/');
 
         $this->apiKey = $apiKey;
 
