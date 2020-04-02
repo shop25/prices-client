@@ -7,6 +7,6 @@ namespace S25\PricesApiClient\Contracts\Request;
  * @package S25\PricesApiClient\Contracts\Request
  *
  * Возвращает
- *   $result[] = ['name' => $supplierName, 'slug' => $supplierSlug]
+ *   $result[] = ['name' => $supplierName, 'slug' => $supplierSlug, 'countryCode' => $countryCode]
  */
 interface SuppliersRequestContract extends BaseRequestContract {}
