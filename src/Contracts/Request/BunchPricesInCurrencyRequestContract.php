@@ -13,11 +13,11 @@ namespace S25\PricesApiClient\Contracts\Request;
  *
  * При setIndexByNumber(false) (по-умолчанию)
  * возвращает:
- *   $result[$supplierSlug][$rawNumber] = $price
+ *   $result[$supplierSlug][$rawNumber] = [$price, $piecesPerPack]
  *
  * При setIndexByNumber(true)
  * возвращает:
- *   $result[$rawNumber][$supplierSlug] = $price
+ *   $result[$rawNumber][$supplierSlug] = [$price, $piecesPerPack]
  *
  */
 interface BunchPricesInCurrencyRequestContract extends BaseRequestContract

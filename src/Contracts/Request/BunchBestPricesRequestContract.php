@@ -12,7 +12,7 @@ namespace S25\PricesApiClient\Contracts\Request;
  *   setCurrencyCodes
  *
  * Возвращает:
- *   $result[$rawNumber][$currencyCode] = [$price, $supplierSlug]
+ *   $result[$rawNumber][$currencyCode] = [$price, $piecesPerPack, $supplierSlug]
  *
  */
 interface BunchBestPricesRequestContract extends BaseRequestContract
