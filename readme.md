@@ -39,12 +39,10 @@ $client = new Client('http://service.url', 'SHOP-API-KEY');
 
 $request = $client->requestBunchBestPrices()
     ->setBrandSlug('suzuki')
-    ->setRawNumbers([
-        'RAWPARTNUMBER1',
-        'RAWPARTNUMBER2',
-        'RAWPARTNUMBER3',
-    ])
-    ->setCurrencyCodes(['CUR']);
+    ->addRawNumber('RAWPARTNUMBER1')
+    ->addRawNumber('RAWPARTNUMBER2')
+    ->addRawNumber('RAWPARTNUMBER3')
+    ->addCurrencyCode('CUR');
 
 ```
 
