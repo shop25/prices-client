@@ -3,19 +3,14 @@
 namespace S25\PricesApiClient\Request;
 
 use S25\PricesApiClient\Contracts\Request\BunchBestPricesRequestContract;
-use S25\PricesApiClient\Validator\CurrencyCodeValidator;
-use S25\PricesApiClient\Validator\ProductRawNumberValidator;
+use S25\PricesApiClient\Validators\CurrencyCodeValidator;
+use S25\PricesApiClient\Validators\ProductRawNumberValidator;
 
 class BunchBestPricesRequest extends BaseRequest implements BunchBestPricesRequestContract
 {
-    use CurrencyCodeValidator;
-    use ProductRawNumberValidator;
-
-    private ?string $brandSlug = null;
-
-    private ?array $rawNumbers = null;
-
-    private ?array $currencyCodes = null;
+    private ?string $brandSlug     = null;
+    private array   $rawNumbers    = [];
+    private array   $currencyCodes = [];
 
     protected function getMethod(): string
     {
@@ -35,17 +30,13 @@ class BunchBestPricesRequest extends BaseRequest implements BunchBestPricesReque
         ];
     }
 
-    protected function validate(): array
+    protected function validateSetup(): array
     {
-        return array_filter(array_merge(
-            $this->brandSlug ? [] : ['Не указан слаг брэнда'],
-            $this->rawNumbers
-                ? array_map([$this, 'validateProductRawNumber'], $this->rawNumbers)
-                : ['Не указан ни один номер детали'],
-            $this->currencyCodes
-                ? array_map([$this, 'validateCurrencyCode'], $this->currencyCodes)
-                : ['Не указаны коды валют'],
-        ));
+        return array_filter([
+            $this->brandSlug ? null : 'Не указан слаг брэнда',
+            $this->rawNumbers ? null : 'Не указан ни один номер детали',
+            $this->currencyCodes ? null : 'Не указаны коды валют',
+        ]);
     }
 
     public function setBrandSlug(string $brandSlug): self
@@ -57,14 +48,36 @@ class BunchBestPricesRequest extends BaseRequest implements BunchBestPricesReque
 
     public function setRawNumbers(array $rawNumbers): self
     {
-        $this->rawNumbers = $rawNumbers;
+        array_walk($rawNumbers, [ProductRawNumberValidator::class, 'assert']);
+
+        $this->rawNumbers = array_values($rawNumbers);
+
+        return $this;
+    }
+
+    public function addRawNumber(string $rawNumber): self
+    {
+        ProductRawNumberValidator::validate($rawNumber);
+
+        $this->rawNumbers[] = $rawNumber;
 
         return $this;
     }
 
     public function setCurrencyCodes(array $currencyCodes): self
     {
-        $this->currencyCodes = $currencyCodes;
+        array_walk($currencyCodes, [CurrencyCodeValidator::class, 'assert']);
+
+        $this->currencyCodes = array_values($currencyCodes);
+
+        return $this;
+    }
+
+    public function addCurrencyCode(string $currencyCode): self
+    {
+        CurrencyCodeValidator::assert($currencyCode);
+
+        $this->currencyCodes[] = $currencyCode;
 
         return $this;
     }

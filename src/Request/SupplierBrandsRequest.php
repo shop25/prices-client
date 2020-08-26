@@ -13,7 +13,7 @@ class SupplierBrandsRequest extends BaseRequest implements SupplierBrandsRequest
         return "/supplier/{$this->slug}/brands";
     }
 
-    protected function validate(): array
+    protected function validateSetup(): array
     {
         if (!$this->slug) {
             return ['Не указан слаг поставщика'];

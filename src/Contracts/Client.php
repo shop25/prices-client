@@ -15,4 +15,6 @@ interface Client
     public function requestBunchPricesInCurrency(): Request\BunchPricesInCurrencyRequestContract;
 
     public function requestBunchBestPrices(): Request\BunchBestPricesRequestContract;
+
+    public function requestCart(): Request\CartRequestContract;
 }

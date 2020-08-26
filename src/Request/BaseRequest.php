@@ -29,7 +29,7 @@ abstract class BaseRequest implements BaseRequestContract
         return null;
     }
 
-    protected function validate(): array
+    protected function validateSetup(): array
     {
         return [];
     }
@@ -42,7 +42,7 @@ abstract class BaseRequest implements BaseRequestContract
      */
     public function performAsync(): PromiseInterface
     {
-        $errors = $this->validate();
+        $errors = $this->validateSetup();
 
         if ($errors) {
             $errorMessage = implode('; ', $errors);

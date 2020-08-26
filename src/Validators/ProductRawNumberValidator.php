@@ -1,10 +1,10 @@
 <?php
 
-namespace S25\PricesApiClient\Validator;
+namespace S25\PricesApiClient\Validators;
 
-trait ProductRawNumberValidator
+class ProductRawNumberValidator extends BaseValidator
 {
-    private function validateProductRawNumber($number): ?string
+    public static function validate($number): ?string
     {
         return preg_match('/^[a-z0-9]+$/ui', $number)
             ? null

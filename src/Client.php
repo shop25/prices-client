@@ -57,9 +57,14 @@ class Client implements Contracts\Client
         return new Request\BunchBestPricesRequest($this->performCallback);
     }
 
+    public function requestCart(): Contracts\Request\CartRequestContract
+    {
+        return new Request\CartRequest($this->performCallback);
+    }
+
     private function generateUrl($endpoint): string
     {
-        return "{$this->serviceUrl}/api/v1.0{$endpoint}";
+        return "{$this->serviceUrl}/api/v1.1{$endpoint}";
     }
 
     private function generateGuzzleOptions($data): array

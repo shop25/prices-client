@@ -4,23 +4,16 @@ namespace S25\PricesApiClient\Request;
 
 use GuzzleHttp\Promise\PromiseInterface;
 use S25\PricesApiClient\Contracts\Request\BunchPricesInCurrencyRequestContract;
-use S25\PricesApiClient\Validator\CurrencyCodeValidator;
-use S25\PricesApiClient\Validator\ProductRawNumberValidator;
+use S25\PricesApiClient\Validators\CurrencyCodeValidator;
+use S25\PricesApiClient\Validators\ProductRawNumberValidator;
 
 class BunchPricesInCurrencyRequest extends BaseRequest implements BunchPricesInCurrencyRequestContract
 {
-    use CurrencyCodeValidator;
-    use ProductRawNumberValidator;
-
-    private ?string $brandSlug = null;
-
-    private ?string $currencyCode = null;
-
-    private ?array $rawNumbers = null;
-
-    private ?string $supplierSlug = null;
-
-    private bool $indexByNumber = false;
+    private ?string $brandSlug     = null;
+    private ?string $currencyCode  = null;
+    private array   $rawNumbers    = [];
+    private ?string $supplierSlug  = null;
+    private bool    $indexByNumber = false;
 
     protected function getMethod(): string
     {
@@ -60,17 +53,13 @@ class BunchPricesInCurrencyRequest extends BaseRequest implements BunchPricesInC
         return $promise;
     }
 
-    protected function validate(): array
+    protected function validateSetup(): array
     {
-        return array_filter(array_merge(
-            [
-                $this->brandSlug ? null : 'Не указан слаг брэнда',
-                $this->validateCurrencyCode($this->currencyCode)
-            ],
-            $this->rawNumbers
-                ? array_map([$this, 'validateProductRawNumber'], $this->rawNumbers)
-                : ['Не указан ни один номер детали']
-        ));
+        return array_filter([
+            $this->brandSlug ? null : 'Не указан слаг брэнда',
+            $this->currencyCode ? null : 'Не указан код валюты',
+            $this->rawNumbers ? null : 'Не указан ни один номер детали',
+        ]);
     }
 
     public function setBrandSlug(string $brandSlug): self
@@ -82,6 +71,8 @@ class BunchPricesInCurrencyRequest extends BaseRequest implements BunchPricesInC
 
     public function setCurrencyCode(string $currencyCode): self
     {
+        CurrencyCodeValidator::assert($currencyCode);
+
         $this->currencyCode = $currencyCode;
 
         return $this;
@@ -89,9 +80,18 @@ class BunchPricesInCurrencyRequest extends BaseRequest implements BunchPricesInC
 
     public function setRawNumbers(array $rawNumbers): self
     {
-        $this->rawNumbers = $rawNumbers;
+        array_walk($rawNumbers, [ProductRawNumberValidator::class, 'assert']);
+
+        $this->rawNumbers = array_values($rawNumbers);
 
         return $this;
+    }
+
+    public function addRawNumber(string $rawNumber): self
+    {
+        ProductRawNumberValidator::assert($rawNumber);
+
+        $this->rawNumbers[] = $rawNumber;
     }
 
     public function setSupplierSlug(string $supplierSlug): self

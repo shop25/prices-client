@@ -9,18 +9,20 @@ namespace S25\PricesApiClient\Contracts\Request;
  * Обязательные перед выполнением perform* методы:
  *   setBrandSlug
  *   setRawNumber
- *   setCurrencyCodes
+ *   setCurrencyCodes или addCurrencyCode
  *
  * Возвращает
  *   $result[$supplierSlug][$currencyCode] = [$price, $piecesPerPack]
  */
 interface ProductPricesRequestContract extends BaseRequestContract
 {
-    public function setBrandSlug($brandSlug): self;
+    public function setBrandSlug(string $brandSlug): self;
 
-    public function setRawNumber($rawNumber): self;
+    public function setRawNumber(string $rawNumber): self;
 
-    public function setCurrencyCodes($currencyCodes): self;
+    public function setCurrencyCodes(array $currencyCodes): self;
 
-    public function setSupplierSlug($supplierSlug): self;
+    public function addCurrencyCode(string $currencyCode): self;
+
+    public function setSupplierSlug(string $supplierSlug): self;
 }
