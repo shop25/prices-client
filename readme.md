@@ -21,6 +21,7 @@ _S25\PricesApiClient\Client_ - класс клиента API, включает �
 Все методы API-запросов следуют следующим соглашениям:
 
 Методы `setRawNumber(s)?` принимают номер/массив номеров без форматирования, только [0-9A-Z]
+Методы вида `set{Param}s` всегда идут в паре с `add{Param}` для попунктному заполнению параметров
 
 Возвращаемые цены всегда за упаковку.
 Лучшие цены рассчитываются исходя из отношения `цена за уп.`/`кол-во в уп.`,
@@ -50,6 +51,10 @@ $request = $client->requestBunchBestPrices()
 
 ```php
 
+use S25\PricesApiClient\Contracts\Request;
+
+/** @var Request\BunchBestPricesRequestContract $request */
+
 $bestPricesResponse = $request->perform();
 
 var_dump($bestPricesResponse);
@@ -59,6 +64,10 @@ var_dump($bestPricesResponse);
 , так и асинхронным:
 
 ```php
+
+use S25\PricesApiClient\Contracts\Request;
+
+/** @var Request\BunchBestPricesRequestContract $request */
 
 $request->performAsync()
     ->then(static function ($bestPricesResponse) {
