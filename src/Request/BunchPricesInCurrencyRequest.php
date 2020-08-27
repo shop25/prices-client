@@ -24,7 +24,7 @@ class BunchPricesInCurrencyRequest extends BaseRequest implements BunchPricesInC
     {
         $supplierSlugPart = $this->supplierSlug ? "/{$this->supplierSlug}" : '';
 
-        return "/bunch/{$this->brandSlug}/prices-in-{$this->currencyCode}{$supplierSlugPart}";
+        return "bunch/{$this->brandSlug}/prices-in-{$this->currencyCode}{$supplierSlugPart}";
     }
 
     protected function getData(): ?array

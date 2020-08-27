@@ -8,6 +8,6 @@ class SuppliersRequest extends BaseRequest implements SuppliersRequestContract
 {
     protected function getEndpoint(): string
     {
-        return '/suppliers';
+        return 'suppliers';
     }
 }

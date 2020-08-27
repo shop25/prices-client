@@ -22,7 +22,7 @@ class BunchPricesRequest extends BaseRequest implements BunchPricesRequestContra
     {
         $supplierSlugPart = $this->supplierSlug ? "/{$this->supplierSlug}" : '';
 
-        return "/bunch/{$this->brandSlug}/prices{$supplierSlugPart}";
+        return "bunch/{$this->brandSlug}/prices{$supplierSlugPart}";
     }
 
     protected function getData(): ?array

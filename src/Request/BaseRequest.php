@@ -4,7 +4,6 @@ namespace S25\PricesApiClient\Request;
 
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Psr7\Response;
 use S25\PricesApiClient\Contracts\Request\BaseRequestContract;
 use S25\PricesApiClient\Exception\RequestSetupException;
 
@@ -50,14 +49,7 @@ abstract class BaseRequest implements BaseRequestContract
             throw new RequestSetupException($errorMessage);
         }
 
-        /** @var PromiseInterface $promise */
-        $promise = ($this->performCallback)($this->getMethod(), $this->getEndpoint(), $this->getData());
-
-        return $promise->then(static function (Response $response) {
-            $contents = $response->getBody()->getContents();
-
-            return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
-        });
+        return ($this->performCallback)($this->getMethod(), $this->getEndpoint(), $this->getData());
     }
 
     /**

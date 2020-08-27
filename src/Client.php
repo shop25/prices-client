@@ -2,28 +2,36 @@
 
 namespace S25\PricesApiClient;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Response;
+use S25\PricesApiClient\Exception\ValidationException;
+
 class Client implements Contracts\Client
 {
-    private string $serviceUrl;
-
-    private string $apiKey;
-
     private \Closure $performCallback;
 
     public function __construct(string $serviceUrl, string $apiKey)
     {
-        $this->serviceUrl = rtrim($serviceUrl, '/');
+        $serviceUrl = rtrim($serviceUrl, '/');
 
-        $this->apiKey = $apiKey;
-
-        $guzzle = new \GuzzleHttp\Client();
+        $guzzle = new GuzzleClient([
+            'base_uri' => "{$serviceUrl}/api/v1.1/",
+            'headers' => [
+                'Authorization' => "Bearer {$apiKey}",
+                'X-Requested-With' => 'XMLHttpRequest',
+            ],
+        ]);
 
         $this->performCallback = function (string $method, string $endpoint, $data) use ($guzzle) {
-            $url = $this->generateUrl($endpoint);
+            /** @var PromiseInterface $promise */
+            $promise = $guzzle->requestAsync($method, $endpoint, ['json' => $data]);
 
-            $options = $this->generateGuzzleOptions($data);
-
-            return $guzzle->requestAsync($method, $url, $options);
+            return $promise->then(
+                \Closure::fromCallable([$this, 'getJson']),
+                \Closure::fromCallable([$this, 'handleValidationError'])
+            );
         };
     }
 
@@ -62,16 +70,36 @@ class Client implements Contracts\Client
         return new Request\CartRequest($this->performCallback);
     }
 
-    private function generateUrl($endpoint): string
+    private function getJson(Response $response)
     {
-        return "{$this->serviceUrl}/api/v1.1{$endpoint}";
+        $contents = $response->getBody()->getContents();
+
+        return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
     }
 
-    private function generateGuzzleOptions($data): array
+    private function getErrors(Response $response)
     {
-        return [
-            'headers' => ['Authorization' => "Bearer {$this->apiKey}"],
-            'json' => $data,
-        ];
+        $errors = $this->getJson($response)['errors'] ?? null;
+
+        return is_array($errors) ? $errors : [];
+    }
+
+    private function handleValidationError($exception): void
+    {
+        if ($exception instanceof RequestException === false) {
+            throw $exception;
+        }
+
+        /** @var RequestException $exception */
+        if ($exception->getResponse()->getStatusCode() !== 422) {
+            throw $exception;
+        }
+
+        $request = $exception->getRequest();
+
+        throw new ValidationException(
+            "В запросе {$request->getMethod()} {$request->getUri()} переданы некорректные данные",
+            $this->getErrors($exception->getResponse())
+        );
     }
 }

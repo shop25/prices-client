@@ -19,7 +19,7 @@ class BunchBestPricesRequest extends BaseRequest implements BunchBestPricesReque
 
     protected function getEndpoint(): string
     {
-        return "/bunch/{$this->brandSlug}/best-prices";
+        return "bunch/{$this->brandSlug}/best-prices";
     }
 
     protected function getData(): ?array

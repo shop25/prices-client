@@ -10,7 +10,7 @@ class SupplierBrandsRequest extends BaseRequest implements SupplierBrandsRequest
 
     protected function getEndpoint(): string
     {
-        return "/supplier/{$this->slug}/brands";
+        return "supplier/{$this->slug}/brands";
     }
 
     protected function validateSetup(): array

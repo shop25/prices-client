@@ -17,7 +17,7 @@ class ProductPricesRequest extends BaseRequest implements ProductPricesRequestCo
     {
         $supplierSlugPart = $this->supplierSlug ? "/{$this->supplierSlug}" : '';
 
-        return "/product/{$this->brandSlug}/{$this->rawNumber}/prices{$supplierSlugPart}";
+        return "product/{$this->brandSlug}/{$this->rawNumber}/prices{$supplierSlugPart}";
     }
 
     protected function getData(): ?array

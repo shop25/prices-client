@@ -20,7 +20,7 @@ class CartRequest extends BaseRequest implements CartRequestContract
 
     protected function getEndpoint(): string
     {
-        return "/cart-in-{$this->currencyCode}";
+        return "cart-in-{$this->currencyCode}";
     }
 
     protected function getData(): ?array
