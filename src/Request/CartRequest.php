@@ -13,6 +13,11 @@ class CartRequest extends BaseRequest implements CartRequestContract
     private array   $supplierSlugs = [];
     private array   $items         = [];
 
+    protected function getMethod(): string
+    {
+        return 'POST';
+    }
+
     protected function getEndpoint(): string
     {
         return "/cart-in-{$this->currencyCode}";
