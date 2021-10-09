@@ -65,6 +65,11 @@ class Client implements Contracts\Client
         return new Request\BunchBestPricesRequest($this->performCallback);
     }
 
+    public function requestPaginateAll(): Contracts\Request\PaginateAllRequestContract
+    {
+        return new Request\PaginateAllRequest($this->performCallback);
+    }
+
     public function requestCart(): Contracts\Request\CartRequestContract
     {
         return new Request\CartRequest($this->performCallback);
