@@ -30,4 +30,11 @@ interface PaginateAllRequestContract extends BaseRequestContract
     public function addCurrencyCode(string $currencyCode): self;
 
     public function setPageSize(int $pageSize): self;
+
+    /**
+     * @experimental
+     *
+     * @return \Generator<[$brandSlug, $rawNumber, [$currencyCode => [float $price, int $piecesPerPack]]]>
+     */
+    public function iterate(): \Generator;
 }

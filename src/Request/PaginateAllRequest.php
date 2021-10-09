@@ -72,4 +72,18 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
             return ['result' => $response['result'], 'done' => $this->startFromId === null];
         });
     }
+
+    /** @inheritDoc */
+    public function iterate(): \Generator
+    {
+        do {
+            ['result' => $result, 'done' => $done] = $this->perform();
+
+            foreach ($result as $brandSlug => $rawNumbers) {
+                foreach ($rawNumbers as $rawNumber => $currencies) {
+                    yield [$brandSlug, $rawNumber, $currencies];
+                }
+            }
+        } while (!$done);
+    }
 }

@@ -17,6 +17,7 @@ class ClientTest extends TestCase
 
     /**
      * @covers \S25\PricesApiClient\Client::requestPaginateAll
+     * @covers \S25\PricesApiClient\Request\PaginateAllRequest::perform
      */
     public function testRequestPaginateAll()
     {
@@ -32,5 +33,31 @@ class ClientTest extends TestCase
         $this->assertArrayHasKey('result', $response);
         $this->assertIsBool($response['done'] ?? null);
         $this->assertIsArray($response['result'] ?? null);
+    }
+
+    /**
+     * @covers \S25\PricesApiClient\Client::requestPaginateAll
+     * @covers \S25\PricesApiClient\Request\PaginateAllRequest::iterate
+     */
+    public function testFetchAll()
+    {
+        $paginateAll = $this->client->requestPaginateAll()
+            ->addCurrencyCode('JPY')
+            ->setPageSize(16)
+        ;
+
+        $count = 0;
+        foreach ($paginateAll->iterate() as $result) {
+            $count++;
+
+            if ($count > 36) {
+                $this->assertIsArray($result);
+                $this->assertCount(3, $result);
+                $this->assertEquals([0, 1, 2], array_keys($result));
+                return;
+            }
+        }
+
+        $this->expectNotToPerformAssertions();
     }
 }

@@ -77,3 +77,18 @@ $request->performAsync()
     ->wait();
 
 ```
+
+## Генераторы
+
+Дополнительны метод `iterate` класса `PaginateAllRequestContract`
+позволяет последовательно получить все цены для всех товаров в цикле _foreach_:
+```php
+
+use S25\PricesApiClient\Contracts\Request;
+
+/** @var Request\PaginateAllRequestContract $request */
+
+foreach ($request->iterate() as [$brandSlug, $rawNumber, $data]) {
+    // ... just DO IT! 
+}
+```
