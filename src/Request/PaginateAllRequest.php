@@ -69,7 +69,10 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
     {
         return parent::performAsync()->then(function ($response) {
             $this->startFromId = $response['last_id'];
-            return ['result' => $response['result'], 'done' => $this->startFromId === null];
+            return [
+                'result' => $response['result'],
+                'done' => $this->startFromId === null
+            ];
         });
     }
 
@@ -79,11 +82,7 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
         do {
             ['result' => $result, 'done' => $done] = $this->perform();
 
-            foreach ($result as $brandSlug => $rawNumbers) {
-                foreach ($rawNumbers as $rawNumber => $currencies) {
-                    yield [$brandSlug, $rawNumber, $currencies];
-                }
-            }
+            yield from $result;
         } while (!$done);
     }
 }

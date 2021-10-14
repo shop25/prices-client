@@ -23,8 +23,7 @@ class ClientTest extends TestCase
     {
         $paginateAll = $this->client->requestPaginateAll()
             ->addCurrencyCode('JPY')
-            ->setPageSize(16)
-        ;
+            ->setPageSize(16);
 
         $response = $paginateAll->perform();
 
@@ -43,8 +42,7 @@ class ClientTest extends TestCase
     {
         $paginateAll = $this->client->requestPaginateAll()
             ->addCurrencyCode('JPY')
-            ->setPageSize(16)
-        ;
+            ->setPageSize(16);
 
         $count = 0;
         foreach ($paginateAll->iterate() as $result) {
@@ -52,8 +50,32 @@ class ClientTest extends TestCase
 
             if ($count > 36) {
                 $this->assertIsArray($result);
-                $this->assertCount(3, $result);
-                $this->assertEquals([0, 1, 2], array_keys($result));
+                $this->assertEqualsCanonicalizing(
+                    [
+                        'brandSlug',
+                        'rawNumber',
+                        'number',
+                        'name',
+                        'prices',
+                    ],
+                    array_keys($result)
+                );
+
+                $prices = $result['prices'];
+
+                $this->assertIsArray($prices);
+                $this->assertNotEmpty($prices);
+
+                $supplierPrices = reset($prices);
+
+                $this->assertIsArray($supplierPrices);
+                $this->assertNotEmpty($supplierPrices);
+
+                $currencyPrices = reset($supplierPrices);
+
+                $this->assertIsArray($currencyPrices);
+                $this->assertCount(2, $currencyPrices);
+
                 return;
             }
         }

@@ -15,10 +15,13 @@ namespace S25\PricesApiClient\Contracts\Request;
  *
  * perform* возвращают:
  *   [
- *      "result" => [$brandSlug => [$rawNumber => [$supplierSlug => [$currencyCode => [
- *          float $price,
- *          int $piecesPerPack
- *      ]]]]],
+ *      "result" => [
+ *          'brandSlug' => "Брэнд",
+ *          'rawNumber' => "Номер без форматирования",
+ *          'number' => "Номер с форматированием",
+ *          'name' => "Название товара",
+ *          'prices' => [$supplierSlug => [$currencyCode => [float $price, int $piecesPerPack]]],
+ *      ][],
  *      "done" => bool, // Признак завершения пагинации,
  *                      // false - еще остались товары, true - все товары получены, указатель вернулся в начало
  *   ]
@@ -33,8 +36,9 @@ interface PaginateAllRequestContract extends BaseRequestContract
 
     /**
      * @experimental
+     * Возвращает генератор, отдающий элементы "result" из perform* по одному.
      *
-     * @return \Generator<[$brandSlug, $rawNumber, [$currencyCode => [float $price, int $piecesPerPack]]]>
+     * @return \Generator
      */
     public function iterate(): \Generator;
 }
