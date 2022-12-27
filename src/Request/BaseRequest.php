@@ -58,7 +58,7 @@ abstract class BaseRequest implements BaseRequestContract
      * @throws ConnectException
      * @throws RequestSetupException
      */
-    public function perform()
+    public function perform(): mixed
     {
         $promise = $this->performAsync();
 
