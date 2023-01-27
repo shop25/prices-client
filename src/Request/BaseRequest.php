@@ -10,6 +10,7 @@ use S25\PricesApiClient\Exception\RequestSetupException;
 abstract class BaseRequest implements BaseRequestContract
 {
     private $performCallback;
+    private int $timeout = 0;
 
     public function __construct(callable $performCallback)
     {
@@ -33,12 +34,15 @@ abstract class BaseRequest implements BaseRequestContract
         return [];
     }
 
-    /**
-     * @return PromiseInterface
-     *
-     * @throws ConnectException
-     * @throws RequestSetupException
-     */
+    /** @inheritDoc */
+    public function setTimeout(int $timeout): self
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /** @inheritDoc */
     public function performAsync(): PromiseInterface
     {
         $errors = $this->validateSetup();
@@ -49,19 +53,17 @@ abstract class BaseRequest implements BaseRequestContract
             throw new RequestSetupException($errorMessage);
         }
 
-        return ($this->performCallback)($this->getMethod(), $this->getEndpoint(), $this->getData());
+        return ($this->performCallback)(
+            $this->getMethod(),
+            $this->getEndpoint(),
+            $this->getData(),
+            $this->timeout
+        );
     }
 
-    /**
-     * @return mixed
-     *
-     * @throws ConnectException
-     * @throws RequestSetupException
-     */
+    /** @inheritDoc */
     public function perform(): mixed
     {
-        $promise = $this->performAsync();
-
-        return $promise->wait(true);
+        return $this->performAsync()->wait(true);
     }
 }

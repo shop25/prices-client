@@ -32,6 +32,8 @@ interface PaginateAllRequestContract extends BaseRequestContract
 
     public function addCurrencyCode(string $currencyCode): self;
 
+    public function addSupplierSlug(string $supplierSlug): self;
+
     public function setPageSize(int $pageSize): self;
 
     /**

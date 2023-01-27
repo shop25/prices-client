@@ -11,6 +11,7 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
     private array $currencyCodes = [];
     private ?int $pageSize = null;
     private ?int $startFromId = null;
+    private ?array $supplierSlugs = null;
 
     protected function getMethod(): string
     {
@@ -28,6 +29,7 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
             'currencies' => $this->currencyCodes,
             'from_id'    => $this->startFromId,
             'count'      => $this->pageSize,
+            'suppliers'  => $this->supplierSlugs,
         ];
     }
 
@@ -61,6 +63,14 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
     public function setPageSize(int $pageSize): self
     {
         $this->pageSize = $pageSize;
+
+        return $this;
+    }
+
+    public function addSupplierSlug(string $supplierSlug): self
+    {
+        $this->supplierSlugs ??= [];
+        $this->supplierSlugs[] = $supplierSlug;
 
         return $this;
     }

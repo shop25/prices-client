@@ -9,6 +9,12 @@ use S25\PricesApiClient\Exception\RequestSetupException;
 interface BaseRequestContract
 {
     /**
+     * @param int $timeout - Предельное время ответа, 0 - запрос никогда не оборвется по таймауту
+     * @return self
+     */
+    public function setTimeout(int $timeout): self;
+
+    /**
      * @return PromiseInterface
      *
      * @throws ConnectException
