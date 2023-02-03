@@ -12,6 +12,7 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
     private ?int $pageSize = null;
     private ?int $startFromId = null;
     private ?array $supplierSlugs = null;
+    private ?array $brandSlugs = null;
 
     protected function getMethod(): string
     {
@@ -30,6 +31,7 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
             'from_id'    => $this->startFromId,
             'count'      => $this->pageSize,
             'suppliers'  => $this->supplierSlugs,
+            'brands'     => $this->brandSlugs,
         ];
     }
 
@@ -75,13 +77,21 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
         return $this;
     }
 
+    public function addBrandSlug(string $brandSlug): self
+    {
+        $this->brandSlugs ??= [];
+        $this->brandSlugs[] = $brandSlug;
+
+        return $this;
+    }
+
     public function performAsync(): PromiseInterface
     {
         return parent::performAsync()->then(function ($response) {
             $this->startFromId = $response['last_id'];
             return [
                 'result' => $response['result'],
-                'done' => $this->startFromId === null
+                'done'   => $this->startFromId === null
             ];
         });
     }

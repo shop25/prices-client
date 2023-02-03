@@ -34,6 +34,8 @@ interface PaginateAllRequestContract extends BaseRequestContract
 
     public function addSupplierSlug(string $supplierSlug): self;
 
+    public function addBrandSlug(string $brandSlug): self;
+
     public function setPageSize(int $pageSize): self;
 
     /**
