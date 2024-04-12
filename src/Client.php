@@ -38,11 +38,25 @@ class Client implements Contracts\Client
             RequestOptions::TIMEOUT => 1,
         ]);
 
-        $this->performCallback = function (string $method, string $endpoint, $data, $timeout = 0) use ($guzzle) {
-            return $guzzle->requestAsync($method, $endpoint, [
+        $this->performCallback = function (
+            string $method,
+            string $endpoint,
+            $data,
+            $timeout = 0,
+            $traceId = ''
+        ) use ($guzzle) {
+            $options = [
                 RequestOptions::JSON => $data,
-                RequestOptions::TIMEOUT => $timeout
-            ])
+                RequestOptions::TIMEOUT => $timeout,
+            ];
+
+            if ($traceId) {
+                $options[RequestOptions::HEADERS] = [
+                    'X-Trace-Id' => $traceId
+                ];
+            }
+
+            return $guzzle->requestAsync($method, $endpoint, $options)
                 ->then(
                     \Closure::fromCallable([$this, 'getJson']),
                     \Closure::fromCallable([$this, 'handleValidationError'])
@@ -117,7 +131,7 @@ class Client implements Contracts\Client
         HttpRequest $request,
         HttpResponse $response = null,
         TransferException $exception = null
-    ) {
+    ): bool {
         // Limit the number of retries to 5
         if ($retries >= 5) {
             return false;

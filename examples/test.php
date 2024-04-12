@@ -4,16 +4,18 @@ require 'vendor/autoload.php';
 
 use S25\PricesApiClient\Client;
 
+$serviceUrl = $_SERVER['PRICES_SERVICE_URL'] ?? 'https://service.url/';
+$apiKey = $_SERVER['PRICES_SERVICE_APIKEY'] ?? 'shop-api.key';
+
 $client = new Client(
-    'https://service.url/',
-    'shop-api.key',
+    $serviceUrl,
+    $apiKey,
 );
 
 $paginateAll = $client->requestPaginateAll()
     ->addCurrencyCode('USD')
-    ->addBrandSlug('yamaha')
-    ->setPageSize(8000)
-    ->setTimeout(5 * 60);
+    ->addBrandSlug('suzuki')
+    ->setPageSize(1);
 
 $count = 0;
 foreach ($paginateAll->iterate() as $result) {
@@ -21,3 +23,8 @@ foreach ($paginateAll->iterate() as $result) {
     $count++;
     fwrite(STDOUT, "[$now] #{$count}: {$result['brandSlug']} {$result['rawNumber']}\n");
 }
+
+fwrite(STDOUT, "Total count: {$count}\n");
+
+return 0;
+

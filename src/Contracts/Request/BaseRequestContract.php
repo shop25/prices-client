@@ -14,6 +14,8 @@ interface BaseRequestContract
      */
     public function setTimeout(int $timeout): self;
 
+    public function setTraceId(string $traceId): self;
+
     /**
      * @return PromiseInterface
      *

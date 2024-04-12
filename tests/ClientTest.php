@@ -23,7 +23,9 @@ class ClientTest extends TestCase
     {
         $paginateAll = $this->client->requestPaginateAll()
             ->addCurrencyCode('JPY')
-            ->setPageSize(16);
+            ->addBrandSlug('yamaha')
+            ->setPageSize(1)
+            ->setTraceId('abcdefg');
 
         $response = $paginateAll->perform();
 
@@ -42,7 +44,9 @@ class ClientTest extends TestCase
     {
         $paginateAll = $this->client->requestPaginateAll()
             ->addCurrencyCode('JPY')
-            ->setPageSize(16);
+            ->addBrandSlug('yamaha')
+            ->setPageSize(1)
+            ->setTraceId('abcdefg');
 
         $count = 0;
         foreach ($paginateAll->iterate() as $result) {
