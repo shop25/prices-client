@@ -16,6 +16,8 @@ interface BaseRequestContract
 
     public function setTraceId(string $traceId): self;
 
+    public function setForwardedFor(string $forwardedFor): self;
+
     /**
      * @return PromiseInterface
      *

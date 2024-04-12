@@ -25,7 +25,8 @@ class ClientTest extends TestCase
             ->addCurrencyCode('JPY')
             ->addBrandSlug('yamaha')
             ->setPageSize(1)
-            ->setTraceId('abcdefg');
+            ->setTraceId('abcdefg')
+            ->setForwardedFor('127.0.0.1');
 
         $response = $paginateAll->perform();
 
@@ -46,7 +47,8 @@ class ClientTest extends TestCase
             ->addCurrencyCode('JPY')
             ->addBrandSlug('yamaha')
             ->setPageSize(1)
-            ->setTraceId('abcdefg');
+            ->setTraceId('abcdefg')
+            ->setForwardedFor('127.0.0.1');
 
         $count = 0;
         foreach ($paginateAll->iterate() as $result) {

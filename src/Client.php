@@ -43,7 +43,8 @@ class Client implements Contracts\Client
             string $endpoint,
             $data,
             $timeout = 0,
-            $traceId = ''
+            $traceId = '',
+            $forwardedFor = '',
         ) use ($guzzle) {
             $options = [
                 RequestOptions::JSON => $data,
@@ -51,9 +52,11 @@ class Client implements Contracts\Client
             ];
 
             if ($traceId) {
-                $options[RequestOptions::HEADERS] = [
-                    'X-Trace-Id' => $traceId
-                ];
+                $options[RequestOptions::HEADERS]['X-Trace-Id'] = $traceId;
+            }
+
+            if ($forwardedFor) {
+                $options[RequestOptions::HEADERS]['X-Forwarded-For'] = $forwardedFor;
             }
 
             return $guzzle->requestAsync($method, $endpoint, $options)

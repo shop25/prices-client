@@ -11,6 +11,7 @@ abstract class BaseRequest implements BaseRequestContract
     private $performCallback;
     private int $timeout = 0;
     private string $traceId = '';
+    private string $forwardedFor = '';
 
     public function __construct(callable $performCallback)
     {
@@ -49,6 +50,13 @@ abstract class BaseRequest implements BaseRequestContract
         return $this;
     }
 
+    public function setForwardedFor(string $forwardedFor): self
+    {
+        $this->forwardedFor = $forwardedFor;
+
+        return $this;
+    }
+
     /** @inheritDoc */
     public function performAsync(): PromiseInterface
     {
@@ -66,6 +74,7 @@ abstract class BaseRequest implements BaseRequestContract
             $this->getData(),
             $this->timeout,
             $this->traceId,
+            $this->forwardedFor,
         );
     }
 
