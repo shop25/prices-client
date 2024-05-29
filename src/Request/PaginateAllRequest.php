@@ -85,6 +85,11 @@ class PaginateAllRequest extends BaseRequest implements PaginateAllRequestContra
         return $this;
     }
 
+    public function addNoBrand(): PaginateAllRequestContract
+    {
+        return $this->addBrandSlug('');
+    }
+
     public function performAsync(): PromiseInterface
     {
         return parent::performAsync()->then(function ($response) {

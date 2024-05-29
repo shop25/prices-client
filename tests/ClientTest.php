@@ -19,11 +19,12 @@ class ClientTest extends TestCase
      * @covers \S25\PricesApiClient\Client::requestPaginateAll
      * @covers \S25\PricesApiClient\Request\PaginateAllRequest::perform
      */
-    public function testRequestPaginateAll()
+    public function testRequestPaginateAll(): void
     {
         $paginateAll = $this->client->requestPaginateAll()
             ->addCurrencyCode('JPY')
             ->addBrandSlug('yamaha')
+            ->addNoBrand()
             ->setPageSize(1)
             ->setTraceId('abcdefg')
             ->setForwardedFor('127.0.0.1');
@@ -41,7 +42,7 @@ class ClientTest extends TestCase
      * @covers \S25\PricesApiClient\Client::requestPaginateAll
      * @covers \S25\PricesApiClient\Request\PaginateAllRequest::iterate
      */
-    public function testFetchAll()
+    public function testFetchAll(): void
     {
         $paginateAll = $this->client->requestPaginateAll()
             ->addCurrencyCode('JPY')
