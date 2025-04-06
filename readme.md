@@ -7,7 +7,7 @@ _S25\PricesApiClient\Contract\ApiMethodRequestContract_.
 Интерфейсы запросов наследуют из базового интерфейса методы _perform()_ и
 _performAsync()_ для синхронного и асинхронного выполнения соответственно.
 
-В комментарии интерфейса запроса есть информация об:
+В комментарии интерфейса запроса есть информация о:
 
 * обязательных сеттерах, вызываемых перед выполнением запроса,
 * формате возвращаемых данных.
@@ -21,15 +21,10 @@ _performAsync()_ для синхронного и асинхронного вы�
 
 Все методы API-запросов следуют следующим соглашениям:
 
-Методы `setRawNumber(s)?` принимают номер/массив номеров без форматирования,
-только [0-9A-Z].
-
 Методы вида `set{Param}s` всегда идут в паре с `add{Param}` для попунктного
 заполнения параметров.
 
-Возвращаемые цены всегда за упаковку. Лучшие цены рассчитываются исходя из
-отношения `цена за уп.`/`кол-во в уп.`, но в результат попадают только цены за
-упаковку.
+Возвращаемые цены всегда за 1 упаковку.
 
 ## Пример инициализации клиента API
 
@@ -41,11 +36,9 @@ use S25\PricesApiClient\Client;
 
 $client = new Client('http://service.url', 'SHOP-API-KEY');
 
-$request = $client->requestBunchBestPrices()
-    ->setBrandSlug('suzuki')
-    ->addRawNumber('RAWPARTNUMBER1')
-    ->addRawNumber('RAWPARTNUMBER2')
-    ->addRawNumber('RAWPARTNUMBER3')
+$request = $client->requestPrices()
+    ->addProduct(['brandSlug', 'RAWPARTNUMBER1'])
+    ->addProduct('guid')
     ->addCurrencyCode('CUR');
 
 ```
@@ -56,7 +49,7 @@ $request = $client->requestBunchBestPrices()
 
 use S25\PricesApiClient\Contracts\Request;
 
-/** @var Request\BunchBestPricesRequestContract $request */
+/** @var Request\PricesRequestContract $request */
 
 $bestPricesResponse = $request->perform();
 
@@ -70,7 +63,7 @@ var_dump($bestPricesResponse);
 
 use S25\PricesApiClient\Contracts\Request;
 
-/** @var Request\BunchBestPricesRequestContract $request */
+/** @var Request\PricesRequestContract $request */
 
 $request->performAsync()
     ->then(static function ($bestPricesResponse) {

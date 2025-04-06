@@ -5,7 +5,6 @@ namespace S25\PricesApiClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request as HttpRequest;
@@ -24,12 +23,10 @@ class Client implements Contracts\Client
         $serviceUrl = rtrim($serviceUrl, '/');
 
         $handler = HandlerStack::create();
-        $handler->push(
-            Middleware::retry(\Closure::fromCallable([$this, 'retryDecider']))
-        );
+        $handler->push(Middleware::retry($this->retryDecider(...)));
 
         $guzzle = new GuzzleClient([
-            'base_uri'              => "{$serviceUrl}/api/v2/",
+            'base_uri'              => "{$serviceUrl}/api/v3/",
             'handler'               => $handler,
             RequestOptions::HEADERS => [
                 'Authorization'    => "Bearer {$apiKey}",
@@ -47,7 +44,7 @@ class Client implements Contracts\Client
             $forwardedFor = '',
         ) use ($guzzle) {
             $options = [
-                RequestOptions::JSON => $data,
+                RequestOptions::JSON    => $data,
                 RequestOptions::TIMEOUT => $timeout,
             ];
 
@@ -61,8 +58,8 @@ class Client implements Contracts\Client
 
             return $guzzle->requestAsync($method, $endpoint, $options)
                 ->then(
-                    \Closure::fromCallable([$this, 'getJson']),
-                    \Closure::fromCallable([$this, 'handleValidationError'])
+                    $this->getJson(...),
+                    $this->handleValidationError(...)
                 );
         };
     }
@@ -133,7 +130,7 @@ class Client implements Contracts\Client
         $retries,
         HttpRequest $request,
         HttpResponse $response = null,
-        TransferException $exception = null
+        \Exception $exception = null
     ): bool {
         // Limit the number of retries to 5
         if ($retries >= 5) {

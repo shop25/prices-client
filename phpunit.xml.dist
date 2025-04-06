@@ -11,10 +11,11 @@
          convertDeprecationsToExceptions="true"
          failOnRisky="true"
          failOnWarning="true"
-         verbose="true">
+         verbose="true"
+         enforceTimeLimit="true">
     <testsuites>
         <testsuite name="default">
-            <directory>tests</directory>
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
 
